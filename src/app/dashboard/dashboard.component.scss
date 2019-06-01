@@ -1,0 +1,16 @@
+.dashboard-wrapper {
+  .sidenav {
+    min-width: 200px;
+    max-width: 200px;
+    min-height: 100vh;
+    max-height: 100vh;
+    overflow: auto;
+  }
+  .body {
+    min-width: calc(100vw - 200px);
+    max-width: calc(100vw - 200px);
+    min-height: 100vh;
+    max-height: 100vh;
+    overflow: auto;
+  }
+}

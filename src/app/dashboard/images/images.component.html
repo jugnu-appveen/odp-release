@@ -1,0 +1,27 @@
+<div class="d-flex flex-wrap">
+  <div class="image-block rounded bg-white border mt-3 ml-3 p-2" *ngFor="let item of imageList;">
+    <table>
+      <tr>
+        <th colspan="2" class="text-primary">
+          <div class="image-name">{{item.RepoTags | imageName}}</div>
+        </th>
+      </tr>
+      <tr>
+        <th class="px-2 text-muted">Image ID</th>
+        <td>{{item.Id | toChars:7:12}}</td>
+      </tr>
+      <tr>
+        <th class="px-2 text-muted">Size</th>
+        <td>{{item.Size | size}}</td>
+      </tr>
+      <tr>
+          <th class="px-2 text-muted">Created</th>
+          <td>{{item.Created | date:'medium'}}</td>
+        </tr>
+      <tr>
+        <th class="px-2 text-muted align-top">Tags</th>
+        <td>{{item.RepoTags}}</td>
+      </tr>
+    </table>
+  </div>
+</div>

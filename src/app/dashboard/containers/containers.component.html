@@ -1,0 +1,73 @@
+<div class="d-flex flex-wrap">
+  <div class="container-block rounded bg-white border mt-3 ml-3 p-2" *ngFor="let item of containerList;"
+    (click)="expandContainerId=item.Id" [ngClass]="{'expand position-fixed':expandContainerId===item.Id}">
+    <table>
+      <tr>
+        <th colspan="2" class="text-primary">
+          <div class="d-flex justify-content-between align-items-start">
+            <div class="container-name">{{item.Names}}</div>
+            <span class="status-icon"
+              [ngClass]="{'text-success':item.State=='running','text-danger':item.State!='running'}">&bull;</span>
+          </div>
+        </th>
+      </tr>
+      <tr>
+        <th class="px-2 text-muted">Container ID</th>
+        <td>{{item.Id | toChars:0:12}}</td>
+      </tr>
+      <tr>
+        <th class="px-2 text-muted">Image ID</th>
+        <td>{{item.ImageID | toChars:7:12}}</td>
+      </tr>
+      <tr>
+        <th class="px-2 text-muted">Status</th>
+        <td>{{item.Status}}</td>
+      </tr>
+      <tr>
+        <th class="px-2 text-muted">Created</th>
+        <td>{{item.Created | date:'medium'}}</td>
+      </tr>
+      <ng-container *ngIf="expandContainerId === item.Id">
+        <tr>
+          <th class="px-2 text-muted align-top">MAC</th>
+          <td>{{item.NetworkSettings.Networks.bridge.MacAddress}}</td>
+        </tr>
+        <tr>
+          <th class="px-2 text-muted align-top">IP</th>
+          <td>{{item.NetworkSettings.Networks.bridge.IPAddress}}</td>
+        </tr>
+        <tr>
+          <th class="px-2 text-muted align-top">Ports</th>
+          <td>
+            <table>
+              <tr>
+                <th class="text-muted">Docker</th>
+                <th class="text-muted">Published</th>
+              </tr>
+              <tr *ngFor="let port of item.Ports">
+                <td>{{port.PrivatePort}}</td>
+                <td>{{port.PublicPort}}</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <th class="px-2 text-muted align-top">Mounts</th>
+          <td>
+            <table>
+              <tr>
+                <th class="text-muted">Source</th>
+                <th class="text-muted">Destination</th>
+              </tr>
+              <tr *ngFor="let port of item.Mounts">
+                <td>{{port.Source}}</td>
+                <td>=>{{port.Destination}}</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </ng-container>
+    </table>
+  </div>
+</div>
+<div *ngIf="expandContainerId" class="overlay" (click)="expandContainerId=null"></div>
