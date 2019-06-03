@@ -24,23 +24,26 @@
       </tr>
     </table>
     <div class="image-options position-absolute d-flex align-items-center border-left border-bottom bg-light">
-      <div class="action-btn p-2 d-flex align-items-center border-right" (click)="exportImage(item)">
+      <div class="action-btn p-2 d-flex align-items-center border-right" (click)="downloadImage(item)"
+        ngbTooltip="Download Tarball" placement="bottom">
         <span class="fa fa-download text-dark"></span>
       </div>
-      <div class="action-btn p-2 d-flex align-items-center border-right" (click)="newTag(item)">
+      <div class="action-btn p-2 d-flex align-items-center border-right" (click)="newTag(item)" ngbTooltip="New Tag"
+        placement="bottom">
         <span class="fa fa-tag text-primary"></span>
       </div>
-      <div class="action-btn p-2 d-flex align-items-center border-right">
+      <div class="action-btn p-2 d-flex align-items-center border-right" ngbTooltip="Create Container" placement="bottom">
         <span class="fa fa-plus-circle text-success"></span>
       </div>
-      <div class="action-btn p-2 d-flex align-items-center" (click)="deleteImg(item)">
+      <div class="action-btn p-2 d-flex align-items-center" (click)="deleteImg(item)" ngbTooltip="Delete Image"
+        placement="bottom">
         <span class="fa fa-trash text-danger"></span>
       </div>
     </div>
   </div>
 </div>
 
-<ng-template #tagImage let-c="close" let-d="dismiss">
+<ng-template #tagImageEle let-c="close" let-d="dismiss">
   <div class="modal-content">
     <div class="modal-header">
       <div class="modal-title">
@@ -51,7 +54,7 @@
     <div class="modal-body">
       <div class="form-group">
         <label for="newTag">Tag name</label>
-        <input type="text" class="form-control">
+        <input type="text" class="form-control" [(ngModel)]="customTag">
       </div>
     </div>
     <div class="modal-footer">
@@ -61,7 +64,36 @@
   </div>
 </ng-template>
 
-<ng-template #deleteImage let-c="close" let-d="dismiss">
+<ng-template #downloadImageEle let-c="close" let-d="dismiss">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title">
+        <span class="fa fa-download text-primary mr-2"></span>
+        <span>Download Image</span>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="newTag">Tag name</label>
+        <div class="form-group">
+          <select #tagSelect name="tag" id="tag" class="custom-select" (ngModelChange)="onTagChange($event)">
+            <option value="">Custom</option>
+            <option [value]="tag" *ngFor="let tag of selectedImage.RepoTags">{{tag}}</option>
+          </select>
+        </div>
+        <div *ngIf="tagSelect.selectedIndex === 0" class="form-group">
+          <input type="text" class="form-control" [(ngModel)]="customTag">
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-dark mr-3" (click)="c(false)">Cancel</button>
+      <button type="button" class="btn btn-success" (click)="triggerDownload()">Create</button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #deleteImageEle let-c="close" let-d="dismiss">
   <div class="modal-content">
     <div class="modal-header">
       <div class="modal-title">
@@ -74,7 +106,7 @@
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-dark mr-3" (click)="c(false)">Cancel</button>
-      <button type="button" class="btn btn-danger">Delete</button>
+      <button type="button" class="btn btn-danger" (click)="triggerDelete()">Delete</button>
     </div>
   </div>
 </ng-template>

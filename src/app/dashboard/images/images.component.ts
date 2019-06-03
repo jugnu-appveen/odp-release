@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { ApiService } from 'src/app/api.service';
-import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalRef, NgbTooltipConfig } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-images',
@@ -9,16 +9,21 @@ import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 })
 export class ImagesComponent implements OnInit {
 
-  @ViewChild('tagImage') tagImage: TemplateRef<HTMLElement>;
-  @ViewChild('deleteImage') deleteImage: TemplateRef<HTMLElement>;
+  @ViewChild('tagImageEle') tagImageEle: TemplateRef<HTMLElement>;
+  @ViewChild('deleteImageEle') deleteImageEle: TemplateRef<HTMLElement>;
+  @ViewChild('downloadImageEle') downloadImageEle: TemplateRef<HTMLElement>;
   imageList: Array<any>;
   selectedImage: any;
-  private tagImageRef: NgbModalRef;
-  private deleteImageRef: NgbModalRef;
+  customTag: string;
+  private tagImageEleRef: NgbModalRef;
+  private deleteImageEleRef: NgbModalRef;
+  private downloadImageEleRef: NgbModalRef;
   constructor(private apiService: ApiService,
-    private modalService: NgbModal) {
+    private modalService: NgbModal,
+    private toolTipConfig: NgbTooltipConfig) {
     const self = this;
     self.imageList = [];
+    self.toolTipConfig.container = 'body';
   }
 
   ngOnInit() {
@@ -38,29 +43,30 @@ export class ImagesComponent implements OnInit {
   newTag(image: any) {
     const self = this;
     self.selectedImage = image;
-    self.tagImageRef = self.modalService.open(self.tagImage, { centered: true });
-    self.tagImageRef.result.then(close => {
+    self.tagImageEleRef = self.modalService.open(self.tagImageEle, { centered: true });
+    self.tagImageEleRef.result.then(close => {
       self.selectedImage = null;
+      self.customTag = null;
     }, dismiss => {
       self.selectedImage = null;
+      self.customTag = null;
     });
   }
 
   triggerTag() {
     const self = this;
     self.apiService.put('image/tag/' + self.selectedImage.Id.substr(7, 12), {
-      tag: '3.0.0'
+      tag: self.customTag
     }).subscribe(res => {
-      console.log(res);
-      self.tagImageRef.close(true);
+      self.tagImageEleRef.close(true);
     }, err => { });
   }
 
   deleteImg(image: any) {
     const self = this;
     self.selectedImage = image;
-    self.deleteImageRef = self.modalService.open(self.deleteImage, { centered: true });
-    self.deleteImageRef.result.then(close => {
+    self.deleteImageEleRef = self.modalService.open(self.deleteImageEle, { centered: true });
+    self.deleteImageEleRef.result.then(close => {
       self.selectedImage = null;
     }, dismiss => {
       self.selectedImage = null;
@@ -69,21 +75,38 @@ export class ImagesComponent implements OnInit {
 
   triggerDelete() {
     const self = this;
-    self.apiService.delete('image/tag/' + self.selectedImage.Id.substr(7, 12))
+    self.apiService.delete('image/' + self.selectedImage.Id.substr(7, 12))
       .subscribe(res => {
-        console.log(res);
-        self.deleteImageRef.close(true);
+        self.deleteImageEleRef.close(true);
       }, err => { });
   }
 
-  exportImage(image: any) {
+  downloadImage(image: any) {
     const self = this;
+    self.selectedImage = image;
+    self.downloadImageEleRef = self.modalService.open(self.downloadImageEle, { centered: true });
+    self.downloadImageEleRef.result.then(close => {
+      self.selectedImage = null;
+    }, dismiss => {
+      self.selectedImage = null;
+    });
+  }
+
+  triggerDownload() {
+    const self = this;
+    const imageId = self.selectedImage.Id.substr(7, 12);
+    const filename = self.customTag || self.selectedImage.RepoTags[0].split(':').join('_');
     const ele = document.createElement('a');
-    ele.href = 'http://localhost:4000/api/image/export/' + image.Id.substr(7, 12)
-      + '?filename=' + image.RepoTags[0].split(':').join('_');
+    ele.href = 'http://localhost:4000/api/image/export/' + imageId
+      + '?filename=' + filename;
     ele.target = '_blank';
     document.body.appendChild(ele);
     ele.click();
     ele.remove();
+  }
+
+  onTagChange(tag: string) {
+    const self = this;
+    self.customTag = tag;
   }
 }
