@@ -6,8 +6,9 @@ const router = require('express').Router();
 
 const logger = log4js.getLogger('Repo');
 const filePath = path.join(process.cwd(), 'db/repos.json');
-
 const LOG_LEVEL = process.env.LOG_LEVEL || 'info';
+
+logger.level = LOG_LEVEL;
 
 router.get('/', (req, res) => {
     jsonfile.readFile(filePath).then(data => {

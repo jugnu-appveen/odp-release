@@ -17,6 +17,7 @@ import { from } from 'rxjs';
 import { ReleaseComponent } from './dashboard/release/release.component';
 import { HotfixComponent } from './dashboard/hotfix/hotfix.component';
 import { ReposComponent } from './dashboard/repos/repos.component';
+import { KeysComponent } from './dashboard/keys/keys.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { ReposComponent } from './dashboard/repos/repos.component';
     ImageNamePipe,
     ReleaseComponent,
     HotfixComponent,
-    ReposComponent
+    ReposComponent,
+    KeysComponent
   ],
   imports: [
     BrowserModule,
