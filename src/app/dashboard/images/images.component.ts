@@ -15,6 +15,8 @@ export class ImagesComponent implements OnInit {
   imageList: Array<any>;
   selectedImage: any;
   customTag: string;
+  seletedTag: string;
+  code: string;
   private tagImageEleRef: NgbModalRef;
   private deleteImageEleRef: NgbModalRef;
   private downloadImageEleRef: NgbModalRef;
@@ -47,15 +49,17 @@ export class ImagesComponent implements OnInit {
     self.tagImageEleRef.result.then(close => {
       self.selectedImage = null;
       self.customTag = null;
+      self.code = null;
     }, dismiss => {
       self.selectedImage = null;
       self.customTag = null;
+      self.code = null;
     });
   }
 
   triggerTag() {
     const self = this;
-    self.apiService.put('image/tag/' + self.selectedImage.Id.substr(7, 12), {
+    self.apiService.put('image/tag?id=' + self.selectedImage.Id.substr(7, 12) + '&token=' + self.code, {
       tag: self.customTag
     }).subscribe(res => {
       self.tagImageEleRef.close(true);
@@ -68,14 +72,16 @@ export class ImagesComponent implements OnInit {
     self.deleteImageEleRef = self.modalService.open(self.deleteImageEle, { centered: true });
     self.deleteImageEleRef.result.then(close => {
       self.selectedImage = null;
+      self.code = null;
     }, dismiss => {
       self.selectedImage = null;
+      self.code = null;
     });
   }
 
   triggerDelete() {
     const self = this;
-    self.apiService.delete('image/' + self.selectedImage.Id.substr(7, 12))
+    self.apiService.delete('image?id=' + self.selectedImage.Id.substr(7, 12) + '&token=' + self.code)
       .subscribe(res => {
         self.deleteImageEleRef.close(true);
       }, err => { });
@@ -87,26 +93,31 @@ export class ImagesComponent implements OnInit {
     self.downloadImageEleRef = self.modalService.open(self.downloadImageEle, { centered: true });
     self.downloadImageEleRef.result.then(close => {
       self.selectedImage = null;
+      self.seletedTag = null;
+      self.code = null;
     }, dismiss => {
       self.selectedImage = null;
+      self.seletedTag = null;
+      self.code = null;
     });
   }
 
   triggerDownload() {
     const self = this;
     const imageId = self.selectedImage.Id.substr(7, 12);
-    const filename = self.customTag || self.selectedImage.RepoTags[0].split(':').join('_');
+    const filename = self.seletedTag.split(':').join('_');
     const ele = document.createElement('a');
-    ele.href = 'http://localhost:4000/api/image/export/' + imageId
-      + '?filename=' + filename;
+    ele.href = 'http://localhost:4000/api/image/export?id=' + imageId
+      + '&filename=' + filename + '&tag=' + self.seletedTag + '&token=' + self.code;
     ele.target = '_blank';
     document.body.appendChild(ele);
     ele.click();
     ele.remove();
+    self.downloadImageEleRef.close(true);
   }
 
   onTagChange(tag: string) {
     const self = this;
-    self.customTag = tag;
+    self.seletedTag = tag;
   }
 }

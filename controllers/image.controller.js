@@ -16,12 +16,12 @@ router.get('/', (req, res) => {
     });
 });
 
-router.get('/export/:id', (req, res) => {
+router.get('/export', (req, res) => {
     try {
-        if (!req.params.id || !req.query.filename) {
+        if (!req.query.filename || !req.query.tag) {
             res.status(400).json({ message: 'Invalid Request' });
         }
-        const image = docker.getImage(req.params.id);
+        const image = docker.getImage(req.query.tag);
         if (!image) {
             res.status(400).json({ message: 'Invalid Request' });
         } else {
@@ -40,12 +40,18 @@ router.get('/export/:id', (req, res) => {
     }
 });
 
-router.delete('/:id', (req, res) => {
+router.delete('/', (req, res) => {
     try {
-        if (!req.params.id) {
+        if (!req.query.id && !req.query.tag) {
             res.status(400).json({ message: 'Invalid Request' });
         }
-        const image = docker.getImage(req.params.id);
+        let image;
+        if (req.query.id) {
+            image = docker.getImage(req.query.id);
+        }
+        if (req.query.tag) {
+            image = docker.getImage(req.query.tag);
+        }
         if (!image) {
             res.status(400).json({ message: 'Invalid Request' });
         } else {
@@ -64,12 +70,12 @@ router.delete('/:id', (req, res) => {
     }
 });
 
-router.put('/tag/:id', (req, res) => {
+router.put('/tag', (req, res) => {
     try {
-        if (!req.params.id || !req.body || !req.body.tag) {
+        if (!req.query.id || !req.body || !req.body.tag) {
             res.status(400).json({ message: 'Invalid Request' });
         }
-        const image = docker.getImage(req.params.id);
+        const image = docker.getImage(req.query.id);
         if (!image) {
             res.status(400).json({ message: 'Invalid Request' });
         } else {

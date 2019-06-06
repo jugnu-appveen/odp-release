@@ -14,6 +14,9 @@ import { SizePipe } from './pipes/size.pipe';
 import { ToCharsPipe } from './pipes/to-chars.pipe';
 import { ImageNamePipe } from './pipes/image-name.pipe';
 import { from } from 'rxjs';
+import { ReleaseComponent } from './dashboard/release/release.component';
+import { HotfixComponent } from './dashboard/hotfix/hotfix.component';
+import { ReposComponent } from './dashboard/repos/repos.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +26,10 @@ import { from } from 'rxjs';
     ContainersComponent,
     SizePipe,
     ToCharsPipe,
-    ImageNamePipe
+    ImageNamePipe,
+    ReleaseComponent,
+    HotfixComponent,
+    ReposComponent
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,96 @@
+const path = require('path');
+const log4js = require('log4js');
+const jsonfile = require('jsonfile');
+const uniqueToken = require('unique-token');
+const router = require('express').Router();
+
+const logger = log4js.getLogger('Repo');
+const filePath = path.join(process.cwd(), 'db/repos.json');
+
+router.get('/', (req, res) => {
+    jsonfile.readFile(filePath).then(data => {
+        res.status(200).json(data);
+    }).catch(err => {
+        logger.error(err);
+        res.status(500).json({ message: err.message });
+    });
+});
+
+router.put('/', (req, res) => {
+    if (!req.query.id || !req.body || !req.body.url || !req.body.name) {
+        res.status(400).json({ message: 'Bad Request' });
+    }
+    jsonfile.readFile(filePath).then(data => {
+        if (!data) {
+            data = [];
+        }
+        const index = data.findIndex(e => e._id == req.query.id);
+        const body = req.body;
+        if (index > -1) {
+            body.id = data[index].id;
+            data.splice(index, 1, body);
+            jsonfile.writeFile(filePath, data).then(saved => {
+                res.status(200).json(body);
+            }).catch(err => {
+                logger.error(err);
+                res.status(500).json({ message: err.message });
+            });
+        } else {
+            res.status(400).json({ message: 'Bad Request' });
+        }
+    }).catch(err => {
+        logger.error(err);
+        res.status(500).json({ message: err.message });
+    });
+});
+
+router.post('/', (req, res) => {
+    if (!req.body || !req.body.url || !req.body.name) {
+        res.status(400).json({ message: 'Bad Request' });
+    }
+    jsonfile.readFile(filePath).then(data => {
+        if (!data) {
+            data = [];
+        }
+        body.id = uniqueToken.token();
+        data.push(body);
+        jsonfile.writeFile(filePath, data).then(saved => {
+            res.status(200).json(body);
+        }).catch(err => {
+            logger.error(err);
+            res.status(500).json({ message: err.message });
+        });
+    }).catch(err => {
+        logger.error(err);
+        res.status(500).json({ message: err.message });
+    });
+});
+
+router.delete('/', (req, res) => {
+    if (!req.query.id) {
+        res.status(400).json({ message: 'Bad Request' });
+    }
+    jsonfile.readFile(filePath).then(data => {
+        if (!data) {
+            data = [];
+        }
+        const index = data.findIndex(e => e._id == req.query.id);
+        const body = req.body;
+        if (index > -1) {
+            data.splice(index, 1);
+            jsonfile.writeFile(filePath, data).then(saved => {
+                res.status(200).json(body);
+            }).catch(err => {
+                logger.error(err);
+                res.status(500).json({ message: err.message });
+            });
+        } else {
+            res.status(400).json({ message: 'Bad Request' });
+        }
+    }).catch(err => {
+        logger.error(err);
+        res.status(500).json({ message: err.message });
+    });
+});
+
+module.exports = router;
