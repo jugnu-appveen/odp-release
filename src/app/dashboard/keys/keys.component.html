@@ -1,3 +1,19 @@
-<p>
-  keys works!
-</p>
+<div class="keys-wrapper">
+  <div class="container p-3">
+    <div class="form-group">
+      <label for="file">Select a Key file</label>
+      <div class="custom-file">
+        <input type="file" class="custom-file-input" id="customFile" (change)="onChange($event)">
+        <label class="custom-file-label" for="customFile">{{selectedFileName?selectedFileName:'Choose file'}}</label>
+      </div>
+    </div>
+    <button type="button" class="btn btn-success" (click)="uploadKey()">Upload</button>
+    <h4 class="mt-3">Keys</h4>
+    <div class="list-group">
+      <div class="list-group-item d-flex align-items-center justify-content-between" *ngFor="let item of keys">
+        <span class="text-truncate">{{item}}</span>
+        <span class="fa fa-trash text-danger hover" (click)="deleteKey(item)"></span>
+      </div>
+    </div>
+  </div>
+</div>

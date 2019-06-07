@@ -1,3 +1,67 @@
-<p>
-  repos works!
-</p>
+<div class="keys-wrapper">
+  <div class="container p-3">
+    <div class="row">
+      <div class="col">
+        <div class="form-group">
+          <label for="url">URL</label>
+          <div class="input-group">
+            <!-- <span class="input-group-prepend">
+              <span class="input-group-text">https://</span>
+            </span> -->
+            <input type="text" class="form-control" id="url" [(ngModel)]="data.url"
+              (blur)="onUrlChange($event.target.value)">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" class="form-control" id="name" [(ngModel)]="data.name">
+        </div>
+      </div>
+      <div class="col">
+        <div class="form-group">
+          <label for="branch">Branch</label>
+          <select name="keyFile" id="keyFile" class="custom-select" [(ngModel)]="data.branch">
+            <option [value]="null">---select---</option>
+            <option value="dev">dev</option>
+            <option value="3.4">3.4</option>
+            <option value="3.3">3.3</option>
+            <option value="3.2">3.2</option>
+            <option value="2.0">2.0</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col text-right">
+        <button type="button" class="btn btn-success btn-min-width" (click)="saveRepo()">Save</button>
+      </div>
+    </div>
+    <h4 class="mt-3">Repos</h4>
+    <table class="table table-bordered w-100">
+      <thead class="thead-light">
+        <tr>
+          <th>#</th>
+          <th>Name</th>
+          <th>URL</th>
+          <th>Branch</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of repos;let i=index">
+          <td>{{i+1}}</td>
+          <td>{{item.name}}</td>
+          <td>{{item.url}}</td>
+          <td>{{item.branch}}</td>
+          <td>
+            <span class="fa fa-trash text-danger hover" (click)="deleteRepo(item._id)"></span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

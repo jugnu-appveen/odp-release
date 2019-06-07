@@ -1,8 +1,10 @@
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ToastrModule } from 'ngx-toastr';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -18,6 +20,7 @@ import { ReleaseComponent } from './dashboard/release/release.component';
 import { HotfixComponent } from './dashboard/hotfix/hotfix.component';
 import { ReposComponent } from './dashboard/repos/repos.component';
 import { KeysComponent } from './dashboard/keys/keys.component';
+import { ConfigComponent } from './dashboard/config/config.component';
 
 @NgModule({
   declarations: [
@@ -31,14 +34,17 @@ import { KeysComponent } from './dashboard/keys/keys.component';
     ReleaseComponent,
     HotfixComponent,
     ReposComponent,
-    KeysComponent
+    KeysComponent,
+    ConfigComponent
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
-    NgbModule
+    NgbModule,
+    ToastrModule.forRoot()
   ],
   providers: [ApiService, SizePipe, ToCharsPipe, ImageNamePipe],
   bootstrap: [AppComponent]

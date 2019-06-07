@@ -1,5 +1,6 @@
 @import "assets/bootstrap.min.css";
 @import "assets/font-awesome/css/all.min.css";
+@import "~ngx-toastr/toastr";
 
 .overlay {
   width: 100vw;
@@ -9,4 +10,8 @@
   left: 0;
   position: fixed;
   z-index: 7;
+}
+
+.btn-min-width {
+  min-width: 120px;
 }

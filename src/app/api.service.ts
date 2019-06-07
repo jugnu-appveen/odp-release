@@ -33,4 +33,10 @@ export class ApiService {
     const URL = 'api/' + baseUrl;
     return self.http.delete(URL);
   }
+
+  public upload(baseUrl: string, data: FormData) {
+    const self = this;
+    const URL = 'api/' + baseUrl;
+    return self.http.post(URL, data);
+  }
 }

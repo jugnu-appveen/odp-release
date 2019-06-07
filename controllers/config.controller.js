@@ -1,45 +1,20 @@
 const path = require('path');
 const log4js = require('log4js');
 const jsonfile = require('jsonfile');
-const uniqueToken = require('unique-token');
 const router = require('express').Router();
 
-const logger = log4js.getLogger('Repo');
-const filePath = path.join(process.cwd(), 'db/repos.json');
+const logger = log4js.getLogger('Config');
+const filePath = path.join(process.cwd(), 'db/config.json');
 const LOG_LEVEL = process.env.LOG_LEVEL || 'info';
 
 logger.level = LOG_LEVEL;
 
-router.get('/', (req, res) => {
+router.get('/accessToken', (req, res) => {
     jsonfile.readFile(filePath).then(data => {
-        res.status(200).json(data);
-    }).catch(err => {
-        logger.error(err);
-        res.status(500).json({ message: err.message });
-    });
-});
-
-router.put('/', (req, res) => {
-    if (!req.query.id || !req.body || !req.body.url || !req.body.name) {
-        res.status(400).json({ message: 'Bad Request' });
-    }
-    jsonfile.readFile(filePath).then(data => {
-        if (!data) {
-            data = [];
-        }
-        const index = data.findIndex(e => e._id == req.query.id);
-        const body = req.body;
-        if (index > -1) {
-            body.id = data[index].id;
-            data.splice(index, 1, body);
-            jsonfile.writeFile(filePath, data).then(saved => {
-                res.status(200).json(body);
-            }).catch(err => {
-                logger.error(err);
-                res.status(500).json({ message: err.message });
-            });
+        if (data && data.access) {
+            res.status(200).json(data.access);
         } else {
-            res.status(400).json({ message: 'Bad Request' });
+            res.status(200).json({});
         }
     }).catch(err => {
         logger.error(err);
@@ -47,49 +22,22 @@ router.put('/', (req, res) => {
     });
 });
 
-router.post('/', (req, res) => {
-    if (!req.body || !req.body.url || !req.body.name) {
-        res.status(400).json({ message: 'Bad Request' });
-    }
+router.post('/accessToken', (req, res) => {
     jsonfile.readFile(filePath).then(data => {
-        if (!data) {
-            data = [];
+        if (!req.body || !req.body.username || !req.body.accessToken) {
+            res.status(400).json({ message: 'Bad Request' });
+            return;
         }
-        body.id = uniqueToken.token();
-        data.push(body);
-        jsonfile.writeFile(filePath, data).then(saved => {
-            res.status(200).json(body);
+        if (!data) {
+            data = {};
+        }
+        data.access = req.body;
+        jsonfile.writeFile(filePath, data).then(status => {
+            res.status(200).json({ message: 'Access Token Saved' });
         }).catch(err => {
             logger.error(err);
             res.status(500).json({ message: err.message });
         });
-    }).catch(err => {
-        logger.error(err);
-        res.status(500).json({ message: err.message });
-    });
-});
-
-router.delete('/', (req, res) => {
-    if (!req.query.id) {
-        res.status(400).json({ message: 'Bad Request' });
-    }
-    jsonfile.readFile(filePath).then(data => {
-        if (!data) {
-            data = [];
-        }
-        const index = data.findIndex(e => e._id == req.query.id);
-        const body = req.body;
-        if (index > -1) {
-            data.splice(index, 1);
-            jsonfile.writeFile(filePath, data).then(saved => {
-                res.status(200).json(body);
-            }).catch(err => {
-                logger.error(err);
-                res.status(500).json({ message: err.message });
-            });
-        } else {
-            res.status(400).json({ message: 'Bad Request' });
-        }
     }).catch(err => {
         logger.error(err);
         res.status(500).json({ message: err.message });

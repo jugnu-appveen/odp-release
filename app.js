@@ -7,7 +7,7 @@ const speakeasy = require('speakeasy');
 const containerController = require('./controllers/container.controller');
 const imageController = require('./controllers/image.controller');
 const repoController = require('./controllers/repo.controller');
-const keysController = require('./controllers/keys.controller');
+const configController = require('./controllers/config.controller');
 
 const app = express();
 const logger = log4js.getLogger('Server');
@@ -44,8 +44,8 @@ app.use(function (req, res, next) {
 
 app.use('/api/container', containerController);
 app.use('/api/image', imageController);
-app.use('/api/repo', repoController);
-app.use('/api/keys', keysController);
+app.use('/api/repos', repoController);
+app.use('/api/config', configController);
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'dist/index.html'));
