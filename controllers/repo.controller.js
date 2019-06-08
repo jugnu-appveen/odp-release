@@ -1,11 +1,11 @@
-const { spawn, exec } = require('child_process')
 const path = require('path');
 const log4js = require('log4js');
 const jsonfile = require('jsonfile');
 const uniqueToken = require('unique-token');
 const router = require('express').Router();
 
-const scriptUtils = require('../utils/template.utils');
+const templateUtils = require('../utils/template.utils');
+const scriptUtils = require('../utils/script.utils');
 
 const logger = log4js.getLogger('Repo');
 const filePath = path.join(process.cwd(), 'db/repos.json');
@@ -68,20 +68,12 @@ router.post('/', (req, res) => {
         body._id = uniqueToken.token();
         data.push(body);
         const config = jsonfile.readFileSync(configFilePath) || {};
-        const script = scriptUtils.cloneRepoScript(body, config.access);
-        const thread = spawn(script, {
-            shell: true
+        const script = templateUtils.cloneRepoScript(body, config.access);
+        scriptUtils.execCommand(script).then(status => {
+            logger.info(status);
+        }).catch(err => {
+            logger.error(err);
         });
-        process.stdin.pipe(thread.stdout);
-        // thread.stdout.on('data', (info) => {
-        //     logger.info(info);
-        // });
-        // thread.stderr.on('data', (err) => {
-        //     logger.error(err);
-        // });
-        // thread.on('close', (code) => {
-        //     logger.info(body.name, 'cloned', code);
-        // });
         jsonfile.writeFile(filePath, data).then(saved => {
             res.status(200).json(body);
         }).catch(err => {

@@ -44,4 +44,5 @@ testem.log
 Thumbs.db
 test.js
 
-repos
+/repos
+/db
