@@ -1,3 +1,4 @@
+const fs = require('fs');
 const path = require('path');
 const log4js = require('log4js');
 const express = require('express');
@@ -18,6 +19,14 @@ const PORT = process.env.PORT || 4000;
 const SECRET = process.env.SECRET || 'itworks@123';
 
 logger.level = LOG_LEVEL;
+
+if (!fs.existsSync(path.join(process.cwd(), 'db/repos.json'))) {
+    fs.writeFileSync(path.join(process.cwd(), 'db/repos.json'), '[]', 'utf8');
+}
+
+if (!fs.existsSync(path.join(process.cwd(), 'db/config.json'))) {
+    fs.writeFileSync(path.join(process.cwd(), 'db/config.json'), '{}', 'utf8');
+}
 
 app.use(express.static(path.join(__dirname, 'dist')));
 app.use(bodyParser());
