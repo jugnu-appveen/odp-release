@@ -1,3 +1,11 @@
+<div class="d-flex flex-column p-3">
+  <div class="d-flex align-items-center">
+    <button type="button" class="btn btn-dark mr-3" (click)="newImage()">
+      <span class="fa fa-plus-circle mr-2"></span>
+      <span class="text">New Image</span>
+    </button>
+  </div>
+</div>
 <div class="d-flex flex-wrap pt-3">
   <div class="image-block rounded bg-white border mb-3 ml-3 p-2 position-relative" *ngFor="let item of imageList;">
     <table>
@@ -34,10 +42,6 @@
         placement="bottom">
         <span class="fa fa-tag text-primary"></span>
       </div>
-      <div class="action-btn p-2 d-flex align-items-center border-right" ngbTooltip="Create Container"
-        placement="bottom">
-        <span class="fa fa-plus-circle text-success"></span>
-      </div>
       <div class="action-btn p-2 d-flex align-items-center" (click)="deleteImg(item)" ngbTooltip="Delete Image"
         placement="bottom">
         <span class="fa fa-trash text-danger"></span>
@@ -59,8 +63,6 @@
         <label for="newTag">Tag name</label>
         <input type="text" class="form-control" [(ngModel)]="customTag">
       </div>
-      <label for="">Enter 6-Digit Code</label>
-      <input type="text" class="form-control" [(ngModel)]="code">
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-dark mr-3" (click)="c(false)">Cancel</button>
@@ -86,11 +88,6 @@
             <option [value]="tag" *ngFor="let tag of selectedImage.RepoTags">{{tag}}</option>
           </select>
         </div>
-        <label for="">Enter 6-Digit Code</label>
-        <input type="text" class="form-control" [(ngModel)]="code">
-        <!-- <div *ngIf="tagSelect.selectedIndex === 0" class="form-group">
-          <input type="text" class="form-control" [(ngModel)]="exportName">
-        </div> -->
       </div>
     </div>
     <div class="modal-footer">
@@ -110,12 +107,55 @@
     </div>
     <div class="modal-body">
       <p>Are you sure you want to delete this image?</p>
-      <label for="">Enter 6-Digit Code</label>
-      <input type="text" class="form-control" [(ngModel)]="code">
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-dark mr-3" (click)="c(false)">Cancel</button>
       <button type="button" class="btn btn-danger" (click)="triggerDelete()">Delete</button>
+    </div>
+  </div>
+</ng-template>
+
+
+<ng-template #newImageEle let-c="close" let-d="dismiss">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title">
+        <span class="fa fa-plus-circle text-dark mr-2"></span>
+        <span>New Image</span>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="customFile">Upload a zip</label>
+        <div class="custom-file">
+          <input type="file" class="custom-file-input" id="customFile" (change)="onFileChange($event)">
+          <label class="custom-file-label" for="customFile">{{zipDataName?zipDataName:'Choose file'}}</label>
+        </div>
+      </div>
+      <h4 class="text-secondary font-weight-bold text-center">OR</h4>
+      <div class="row">
+        <div class="col">
+          <div class="form-group">
+            <label for="repo">Build from Repo</label>
+            <div class="input-group">
+              <select class="custom-select" name="repo" id="repo" [(ngModel)]="imageBuildData.repo"
+                (change)="onRepoChange($event)">
+                <option [value]="null">&lt;&lt;repo&gt;&gt;</option>
+                <option [value]="repo._id" *ngFor="let repo of repoList">{{repo.name}}</option>
+              </select>
+              <select class="custom-select" name="branch" id="branch" [(ngModel)]="imageBuildData.branch">
+                <option [value]="null">&lt;&lt;branch&gt;&gt;</option>
+                <option [value]="branch" *ngFor="let branch of branchList">{{branch}}</option>
+              </select>
+              <input type="text" class="form-control col-3" name="tag" id="tag" [(ngModel)]="imageBuildData.tag" placeholder="Image Tag">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-dark mr-3" (click)="c(false)">Cancel</button>
+      <button type="button" class="btn btn-success" (click)="triggerNewImage()">Build Image</button>
     </div>
   </div>
 </ng-template>

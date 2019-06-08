@@ -2,11 +2,15 @@
   <div class="rounded bg-white p-3 clearfix">
     <p>Access Details to fetch repository</p>
     <div class="form-group">
-      <label for="username" class="text-secondary">Username</label>
+      <label for="username" class="text-secondary">Username
+        <sup class="text-danger">*</sup>
+      </label>
       <input type="text" class="form-control" [(ngModel)]="data.username">
     </div>
     <div class="form-group">
-      <label for="accessToken" class="text-secondary">Access Token</label>
+      <label for="accessToken" class="text-secondary">Access Token
+        <sup class="text-danger">*</sup>
+      </label>
       <input type="text" class="form-control" [(ngModel)]="data.accessToken">
     </div>
     <button type="button" class="btn btn-success btn-min-width float-right" (click)="saveConfig()">Save</button>

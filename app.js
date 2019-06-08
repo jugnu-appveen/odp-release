@@ -12,7 +12,7 @@ const configController = require('./controllers/config.controller');
 
 const app = express();
 const logger = log4js.getLogger('Server');
-const authUrls = ['/api/image/export', '/api/image/tag', '/api/image'];
+const authUrls = [];
 
 const LOG_LEVEL = process.env.LOG_LEVEL || 'info';
 const PORT = process.env.PORT || 4000;
@@ -26,6 +26,10 @@ if (!fs.existsSync(path.join(process.cwd(), 'db/repos.json'))) {
 
 if (!fs.existsSync(path.join(process.cwd(), 'db/config.json'))) {
     fs.writeFileSync(path.join(process.cwd(), 'db/config.json'), '{}', 'utf8');
+}
+
+if (!fs.existsSync(path.join(process.cwd(), 'db/releases.json'))) {
+    fs.writeFileSync(path.join(process.cwd(), 'db/releases.json'), '[]', 'utf8');
 }
 
 app.use(express.static(path.join(__dirname, 'dist')));
