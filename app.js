@@ -9,6 +9,7 @@ const containerController = require('./controllers/container.controller');
 const imageController = require('./controllers/image.controller');
 const repoController = require('./controllers/repo.controller');
 const configController = require('./controllers/config.controller');
+const taskController = require('./controllers/task.controller');
 
 const app = express();
 const logger = log4js.getLogger('Server');
@@ -30,6 +31,10 @@ if (!fs.existsSync(path.join(process.cwd(), 'db/config.json'))) {
 
 if (!fs.existsSync(path.join(process.cwd(), 'db/releases.json'))) {
     fs.writeFileSync(path.join(process.cwd(), 'db/releases.json'), '[]', 'utf8');
+}
+
+if (!fs.existsSync(path.join(process.cwd(), 'db/tasks.json'))) {
+    fs.writeFileSync(path.join(process.cwd(), 'db/tasks.json'), '[]', 'utf8');
 }
 
 app.use(express.static(path.join(__dirname, 'dist')));
@@ -59,6 +64,7 @@ app.use('/api/container', containerController);
 app.use('/api/image', imageController);
 app.use('/api/repos', repoController);
 app.use('/api/config', configController);
+app.use('/api/task', taskController);
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'dist/index.html'));

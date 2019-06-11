@@ -21,6 +21,7 @@ import { HotfixComponent } from './dashboard/hotfix/hotfix.component';
 import { ReposComponent } from './dashboard/repos/repos.component';
 import { KeysComponent } from './dashboard/keys/keys.component';
 import { ConfigComponent } from './dashboard/config/config.component';
+import { TasksComponent } from './dashboard/tasks/tasks.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { ConfigComponent } from './dashboard/config/config.component';
     HotfixComponent,
     ReposComponent,
     KeysComponent,
-    ConfigComponent
+    ConfigComponent,
+    TasksComponent
   ],
   imports: [
     BrowserModule,
